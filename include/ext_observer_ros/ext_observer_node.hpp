@@ -1,5 +1,7 @@
-#ifndef EXT_OBSERVER_NODE_HPP
-#define EXT_OBSERVER_NODE_HPP
+// Copyright 2020-2024 Stanislav Mikhel
+
+#ifndef EXT_OBSERVER_ROS__EXT_OBSERVER_NODE_HPP_
+#define EXT_OBSERVER_ROS__EXT_OBSERVER_NODE_HPP_
 
 #include <memory>
 
@@ -25,5 +27,4 @@ private:
   double last_sec_ = -1;
 };
 
-
-#endif  // EXT_OBSERVER_NODE_HPP
+#endif  // EXT_OBSERVER_ROS__EXT_OBSERVER_NODE_HPP_

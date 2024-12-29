@@ -1,3 +1,4 @@
+// Copyright 2020-2024 Stanislav Mikhel
 /**
  * @file external_observer.h
  *
@@ -6,8 +7,8 @@
  * Define robot interfaces for working with dynamic matrices and recursice Newton-Euler algorithm
  * and corresponding observers.
  */
-#ifndef EXTERNAL_OBSERVER_HPP
-#define EXTERNAL_OBSERVER_HPP
+#ifndef EXT_OBSERVER__EXTERNAL_OBSERVER_HPP_
+#define EXT_OBSERVER__EXTERNAL_OBSERVER_HPP_
 
 #include <eigen3/Eigen/Geometry>
 
@@ -39,7 +40,7 @@ public:
    * @return Joint number.
    */
   virtual int jointNo() = 0;
-}; // RobotDynamicsBase
+};  // RobotDynamicsBase
 
 /**
  * @brief Base class when M, C and G are known.
@@ -71,7 +72,7 @@ public:
    * @return vector G.
    */
   virtual Vec getG(Vec& q) = 0;
-}; // RobotDynamics
+};  // RobotDynamics
 
 /**
  * @brief Base class when RNEA is defined.
@@ -95,7 +96,7 @@ public:
    * @param g gravity constant.
    * @return torque value.
    */
-  virtual Vec rnea(Vec& q, Vec& qd, Vec& q2d, double g=0) = 0;
+  virtual Vec rnea(Vec& q, Vec& qd, Vec& q2d, double g = 0) = 0;
 
   /**
    * @brief Angle step for derivative estimation.
@@ -128,7 +129,7 @@ protected:
   Mat _M;
   /** @bried Differentiation step. */
   double delta;
-}; // RobotDynamicsRnea
+};  // RobotDynamicsRnea
 
 class ExternalObserverBase {
 public:
@@ -166,7 +167,7 @@ protected:
   int jointNo;           /**< Number of joints. */
   int objType;           /**< Observer type. */
   bool isRun;            /**< First call check. */
-}; // ExternalObserverBase
+};  // ExternalObserverBase
 
 /**
  * @brief External torque observer.
@@ -188,7 +189,7 @@ public:
 
 protected:
   RobotDynamics *dyn;    /**< Pointer to the robot interface. */
-}; // ExternalObserver
+};  // ExternalObserver
 
 /**
  * @brief External torque observer.
@@ -210,6 +211,6 @@ public:
 
 protected:
   RobotDynamicsRnea *dyn; /**< Pointer to the robot interface. */
-}; // ExternalObserverRnea
+};  // ExternalObserverRnea
 
-#endif // EXTERNAL_OBSERVER_HPP
+#endif  // EXT_OBSERVER__EXTERNAL_OBSERVER_HPP_

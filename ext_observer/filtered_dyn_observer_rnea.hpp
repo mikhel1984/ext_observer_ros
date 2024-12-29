@@ -1,6 +1,7 @@
+// Copyright 2020-2024 Stanislav Mikhel
 
-#ifndef FILTERED_DYNAMIC_OBSERVER_RNEA_HPP
-#define FILTERED_DYNAMIC_OBSERVER_RNEA_HPP
+#ifndef EXT_OBSERVER__FILTERED_DYN_OBSERVER_RNEA_HPP_
+#define EXT_OBSERVER__FILTERED_DYN_OBSERVER_RNEA_HPP_
 
 #include "external_observer.hpp"
 #include "iir_filter.hpp"
@@ -19,13 +20,12 @@ private:
   FilterF1 f1;
   FilterF2 f2;
   Vec p, res, zero;
-
-}; // FDynObserver
+};  // FDynObserver
 
 FDynObserverRnea::FDynObserverRnea(RobotDynamicsRnea *rd, double cutOffHz, double sampHz)
-  : ExternalObserverRnea(rd,ID_FDynObserverRnea)
-  , f1(FilterF1(cutOffHz,sampHz,jointNo))
-  , f2(FilterF2(cutOffHz,sampHz,jointNo))
+  : ExternalObserverRnea(rd, ID_FDynObserverRnea)
+  , f1(FilterF1(cutOffHz, sampHz, jointNo))
+  , f2(FilterF2(cutOffHz, sampHz, jointNo))
   , p(Vec(jointNo))
   , res(Vec(jointNo))
   , zero(Vec::Zero(jointNo))
@@ -34,22 +34,22 @@ FDynObserverRnea::FDynObserverRnea(RobotDynamicsRnea *rd, double cutOffHz, doubl
 
 void FDynObserverRnea::settings(double cutOffHz, double sampHz)
 {
-  f1.update(cutOffHz,sampHz);
-  f2.update(cutOffHz,sampHz);
+  f1.update(cutOffHz, sampHz);
+  f2.update(cutOffHz, sampHz);
 }
 
 Vec FDynObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double dt)
 {
-  p = dyn->rnea(q,zero,qd);     // M * qd
+  p = dyn->rnea(q, zero, qd);     // M * qd
 
   if(isRun) {
-    res = f2.filt(p,dt) + f2.getOmega() * p ;
-    p = dyn->getFriction(qd) + dyn->rnea(q,zero,zero,GRAVITY) - dyn->tranCqd(q,qd);  // reuse
+    res = f2.filt(p, dt) + f2.getOmega() * p ;
+    p = dyn->getFriction(qd) + dyn->rnea(q, zero, zero, GRAVITY) - dyn->tranCqd(q, qd);  // reuse
     p -= tau;
-    res += f1.filt(p,dt);
+    res += f1.filt(p, dt);
   } else {
     f2.set(p);
-    p = dyn->getFriction(qd) + dyn->rnea(q,zero,zero,GRAVITY) - dyn->tranCqd(q,qd);  // reuse
+    p = dyn->getFriction(qd) + dyn->rnea(q, zero, zero, GRAVITY) - dyn->tranCqd(q, qd);  // reuse
     p -= tau;
     f1.set(p);
     res.setZero();
@@ -59,4 +59,4 @@ Vec FDynObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double dt)
   return res;
 }
 
-#endif // FILTERED_DYNAMIC_OBSERVER_RNEA_HPP
+#endif  // EXT_OBSERVER__FILTERED_DYN_OBSERVER_RNEA_HPP_

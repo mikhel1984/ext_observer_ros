@@ -1,3 +1,4 @@
+// Copyright 2020-2024 Stanislav Mikhel
 /**
  * @file sliding_mode_observer_rnea.hpp
  *
@@ -5,8 +6,8 @@
  *
  * Expected robot dynamics in form of RNEA.
  */
-#ifndef SLIDING_MODE_OBSERVER_RNEA_HPP
-#define SLIDING_MODE_OBSERVER_RNEA_HPP
+#ifndef EXT_OBSERVER__SLIDING_MODE_OBSERVER_RNEA_HPP_
+#define EXT_OBSERVER__SLIDING_MODE_OBSERVER_RNEA_HPP_
 
 
 #include "external_observer.hpp"
@@ -53,13 +54,12 @@ private:
  Vec sigma, p_hat;
  Vec p, spp, dp_hat, torque, dsigma, zeros;
  Vec T1, S1, T2, S2;
-
-}; // SlidingModeObserverRnea
+};  // SlidingModeObserverRnea
 
 // Initialization
 SlidingModeObserverRnea::SlidingModeObserverRnea(RobotDynamicsRnea* rd,
                                 Vec& t1, Vec& s1, Vec& t2, Vec& s2)
-  : ExternalObserverRnea(rd,ID_SlidingModeObserverRnea)
+  : ExternalObserverRnea(rd, ID_SlidingModeObserverRnea)
   , sigma(Vec(jointNo))
   , p_hat(Vec(jointNo))
   , p(Vec(jointNo))
@@ -71,7 +71,7 @@ SlidingModeObserverRnea::SlidingModeObserverRnea(RobotDynamicsRnea* rd,
   , T1(Vec(jointNo)), S1(Vec(jointNo))
   , T2(Vec(jointNo)), S2(Vec(jointNo))
 {
-  settings(t1,s1,t2,s2);
+  settings(t1, s1, t2, s2);
 }
 
 // Update settings
@@ -86,7 +86,7 @@ void SlidingModeObserverRnea::settings(Vec& t1, Vec& s1, Vec& t2, Vec& s2)
 // External torque
 Vec SlidingModeObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double dt)
 {
-  p = dyn->rnea(q,zeros,qd);
+  p = dyn->rnea(q, zeros, qd);
   torque = tau - dyn->getFriction(qd);
 
   if(!isRun) {
@@ -98,7 +98,7 @@ Vec SlidingModeObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double
   p = p_hat - p;  // reuse p
   for(int i = 0; i < jointNo; i++) spp(i) = tanh(p(i)*BIGR);
 
-  dp_hat = torque + dyn->tranCqd(q,qd) - dyn->rnea(q,zeros,zeros,GRAVITY) + sigma;
+  dp_hat = torque + dyn->tranCqd(q, qd) - dyn->rnea(q, zeros, zeros, GRAVITY) + sigma;
   for(int i = 0; i < jointNo; i++) {
     // - T2*p
     dp_hat(i) -= T2(i)*p(i);
@@ -117,4 +117,4 @@ Vec SlidingModeObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double
   return p;
 }
 
-#endif  // SLIDING_MODE_OBSERVER_RNEA_HPP
+#endif  // EXT_OBSERVER__SLIDING_MODE_OBSERVER_RNEA_HPP_

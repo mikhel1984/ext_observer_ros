@@ -1,3 +1,4 @@
+// Copyright 2020-2024 Stanislav Mikhel
 
 #include "ext_observer_ros/ext_observer_node.hpp"
 

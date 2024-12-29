@@ -1,5 +1,7 @@
-#ifndef ROBOT_TREE_HPP
-#define ROBOT_TREE_HPP
+// Copyright 2020-2024 Stanislav Mikhel
+
+#ifndef EXT_OBSERVER_ROS__ROBOT_TREE_HPP_
+#define EXT_OBSERVER_ROS__ROBOT_TREE_HPP_
 
 #include <eigen3/Eigen/Dense>
 
@@ -26,7 +28,7 @@ public:
 
   void fill_inv(const Vec& vec, std::vector<std::string>& nms, std::vector<double>& vs);
 
-  Vec rnea(Vec& q, Vec& qd, Vec& q2d, double g=0) override;
+  Vec rnea(Vec& q, Vec& qd, Vec& q2d, double g = 0) override;
 
   inline int jointNo() override { return joints_.size(); }
 
@@ -46,7 +48,6 @@ private:
   Vec tau_out_;
 
   unsigned joint_tot_ = 0;
-
 };  // RobotTree
 
-#endif  // ROBOT_TREE_HPP
+#endif  // EXT_OBSERVER_ROS__ROBOT_TREE_HPP_

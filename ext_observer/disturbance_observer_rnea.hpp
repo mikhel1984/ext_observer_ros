@@ -1,3 +1,4 @@
+// Copyright 2020-2024 Stanislav Mikhel
 /**
  * @file disturbance_observer_rnea.h
  *
@@ -5,8 +6,8 @@
  *
  * Expected robot dynamics in form of RNEA.
  */
-#ifndef DISTURBANCE_OBSERVER_RNEA_HPP
-#define DISTURBANCE_OBSERVER_RNEA_HPP
+#ifndef EXT_OBSERVER__DISTURBANCE_OBSERVER_RNEA_HPP_
+#define EXT_OBSERVER__DISTURBANCE_OBSERVER_RNEA_HPP_
 
 #include "external_observer.hpp"
 
@@ -49,23 +50,23 @@ private:
   Mat Y, L, I;
   Mat lft, rht;
   Vec p, z, torque, zeros;
-
-}; // DisturbanceObserverRnea
+};  // DisturbanceObserverRnea
 
 // Initialization
-DisturbanceObserverRnea::DisturbanceObserverRnea(RobotDynamicsRnea *rd, double sigma, double xeta, double beta)
-  : ExternalObserverRnea(rd,ID_DisturbanceObserverRnea)
-  , Y(Mat(jointNo,jointNo))
-  , L(Mat(jointNo,jointNo))
-  , I(Mat::Identity(jointNo,jointNo))
-  , lft(Mat(jointNo,jointNo))
-  , rht(Mat(jointNo,jointNo))
+DisturbanceObserverRnea::DisturbanceObserverRnea(
+  RobotDynamicsRnea *rd, double sigma, double xeta, double beta)
+  : ExternalObserverRnea(rd, ID_DisturbanceObserverRnea)
+  , Y(Mat(jointNo, jointNo))
+  , L(Mat(jointNo, jointNo))
+  , I(Mat::Identity(jointNo, jointNo))
+  , lft(Mat(jointNo, jointNo))
+  , rht(Mat(jointNo, jointNo))
   , p(Vec(jointNo))
   , z(Vec(jointNo))
   , torque(Vec(jointNo))
   , zeros(Vec::Zero(jointNo))
 {
-  settings(sigma,xeta,beta);
+  settings(sigma, xeta, beta);
 }
 
 // Get torque
@@ -78,7 +79,7 @@ Vec DisturbanceObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double
   if(isRun) {
     torque = tau - dyn->getFriction(qd);
     lft = I + L;
-    rht = z + L*(dyn->rnea(q,qd,zeros,GRAVITY) - torque - p);
+    rht = z + L*(dyn->rnea(q, qd, zeros, GRAVITY) - torque - p);
     z = lft.inverse() * rht;
   } else {
     z = -p;
@@ -94,7 +95,7 @@ Vec DisturbanceObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double
 void DisturbanceObserverRnea::settings(double sigma, double xeta, double beta)
 {
   double k = 0.5*(xeta + 2*beta*sigma);
-  Y = k * Mat::Identity(jointNo,jointNo);
+  Y = k * Mat::Identity(jointNo, jointNo);
 }
 
-#endif // DISTURBANCE_OBSERVER_RNEA_HPP
+#endif  // EXT_OBSERVER__DISTURBANCE_OBSERVER_RNEA_HPP_

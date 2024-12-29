@@ -1,3 +1,4 @@
+// Copyright 2020-2024 Stanislav Mikhel
 /**
  * @file momentum_observer_rnea.hpp
  *
@@ -5,8 +6,8 @@
  *
  * Expected robot dynamics in form of RNEA.
  */
-#ifndef MOMENTUM_OBSERVER_RNEA_HPP
-#define MOMENTUM_OBSERVER_RNEA_HPP
+#ifndef EXT_OBSERVER__MOMENTUM_OBSERVER_RNEA_HPP_
+#define EXT_OBSERVER__MOMENTUM_OBSERVER_RNEA_HPP_
 
 #include "external_observer.hpp"
 
@@ -47,12 +48,11 @@ private:
   Vec p, beta, torque, tprev;
   // coefficients
   Vec ko;
-
-}; // MomentumObserverRnea
+};  // MomentumObserverRnea
 
 // Initialization
 MomentumObserverRnea::MomentumObserverRnea(RobotDynamicsRnea *rd, Vec& k)
-  : ExternalObserverRnea(rd,ID_MomentumObserverRnea)
+  : ExternalObserverRnea(rd, ID_MomentumObserverRnea)
   , sum(Vec(jointNo))
   , r(Vec(jointNo))
   , zero(Vec::Zero(jointNo))
@@ -68,13 +68,13 @@ MomentumObserverRnea::MomentumObserverRnea(RobotDynamicsRnea *rd, Vec& k)
 // Torque estimation
 Vec MomentumObserverRnea::getExternalTorque(Vec& q, Vec& qd, Vec& tau, double dt)
 {
-  p = dyn->rnea(q,zero,qd);     // M * qd
-  beta = dyn->rnea(q,zero,zero,GRAVITY)- dyn->tranCqd(q,qd);  // G - C' * qd
+  p = dyn->rnea(q, zero, qd);     // M * qd
+  beta = dyn->rnea(q, zero, zero, GRAVITY)- dyn->tranCqd(q, qd);  // G - C' * qd
 
-  torque = tau - dyn->getFriction(qd); // exclude friction
+  torque = tau - dyn->getFriction(qd);  // exclude friction
   if(isRun) {
     torque += r - beta;      // tau + r - beta
-    sum += 0.5 * dt * (torque + tprev);
+    sum += 0.5 * dt*(torque + tprev);
   } else {
     torque -= beta;
     r.setZero();
@@ -100,4 +100,4 @@ void MomentumObserverRnea::settings(Vec& k)
   ko = k;
 }
 
-#endif // MOMENTUM_OBSERVER_RNEA_HPP
+#endif  // EXT_OBSERVER__MOMENTUM_OBSERVER_RNEA_HPP_

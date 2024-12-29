@@ -1,19 +1,19 @@
-#ifndef IIR_FILTER_HPP
-#define IIR_FILTER_HPP
+// Copyright 2020-2024 Stanislav Mikhel
 
-#include <cmath>
+#ifndef EXT_OBSERVER__IIR_FILTER_HPP_
+#define EXT_OBSERVER__IIR_FILTER_HPP_
+
 #include <eigen3/Eigen/Dense>
+#include <cmath>
 
 #define SQ2 1.4142135623731
 
 class FilterIIR {
 public:
-
   virtual Eigen::VectorXd filt(Eigen::VectorXd& x) = 0;
 
   virtual void update(double cutOff, double sampTime) = 0;
-
-}; // FilterIIR
+};  // FilterIIR
 
 // H(s) = w / (s + w)
 class FilterF1 : public FilterIIR {
@@ -22,7 +22,7 @@ public:
   : FilterIIR()
   , x1(Eigen::VectorXd(N))
   , y1(Eigen::VectorXd(N))
-  { update(cutOff,sampTime); }
+  { update(cutOff, sampTime); }
 
   Eigen::VectorXd filt(Eigen::VectorXd& x);
 
@@ -34,8 +34,7 @@ public:
 private:
   Eigen::VectorXd x1, y1;
   double k1, k2, cut;
-
-}; // FilterF1
+};  // FilterF1
 
 // H(s) = -w^2 / (s + w)
 class FilterF2 : public FilterIIR {
@@ -44,7 +43,7 @@ public:
   : FilterIIR()
   , x1(Eigen::VectorXd(N))
   , y1(Eigen::VectorXd(N))
-  { update(cutOff,sampTime); }
+  { update(cutOff, sampTime); }
 
   Eigen::VectorXd filt(Eigen::VectorXd& x);
 
@@ -58,9 +57,7 @@ public:
 private:
   Eigen::VectorXd x1, y1;
   double f2, omega, k1, k2, cut;
-
-}; // FilterF2
-
+};  // FilterF2
 
 class FilterButterworth : public FilterIIR {
 public:
@@ -71,18 +68,16 @@ public:
   , y1(Eigen::VectorXd(N))
   , y2(Eigen::VectorXd(N))
   , res(Eigen::VectorXd(N))
-  { update(cutOff,sampTime); }
+  { update(cutOff, sampTime); }
 
   Eigen::VectorXd filt(Eigen::VectorXd& x);
 
   void update(double cutOff, double sampTime);
 
-
 private:
   Eigen::VectorXd x1, x2, y1, y2, res;
   double kx0, kx1, ky1, ky2;
-
-}; // FilterButterworth
+};  // FilterButterworth
 
 
 class FilterLowPass : public FilterIIR {
@@ -91,7 +86,7 @@ public:
   : FilterIIR()
   , x1(Eigen::VectorXd(N))
   , y1(Eigen::VectorXd(N))
-  { update(cutOff,sampTime); }
+  { update(cutOff, sampTime); }
 
   void update(double cutOff, double sampTime);
 
@@ -100,8 +95,7 @@ public:
 private:
   Eigen::VectorXd x1, y1;
   double k1, k2;
-
-}; // FilterLowPass
+};  // FilterLowPass
 
 class FilterHighPass : public FilterIIR {
 public:
@@ -109,7 +103,7 @@ public:
   : FilterIIR()
   , x1(Eigen::VectorXd(N))
   , y1(Eigen::VectorXd(N))
-  { update(cutOff,sampTime); }
+  { update(cutOff, sampTime); }
 
   void update(double cutOff, double sampTime);
 
@@ -118,12 +112,10 @@ public:
 private:
   Eigen::VectorXd x1, y1;
   double k1, k2;
-
-}; // FilterHighPass
+};  // FilterHighPass
 
 Eigen::VectorXd FilterF1::filt(Eigen::VectorXd& x)
 {
-
   y1 = k1*y1 + k2*(x + x1);
   x1 = x;
 
@@ -226,5 +218,4 @@ Eigen::VectorXd FilterHighPass::filt(Eigen::VectorXd& x)
   return y1;
 }
 
-
-#endif // IIR_FILTER_HPP
+#endif  // EXT_OBSERVER__IIR_FILTER_HPP_
