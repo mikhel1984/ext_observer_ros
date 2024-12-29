@@ -38,10 +38,11 @@ void RobotTree::init_internal(const KDL::Tree& tree)
   for (auto it = segments.begin(); it != segments.end(); it++) {
     auto tp = GetTreeElementSegment(it->second).getJoint().getType();
     if (tp != KDL::Joint::Fixed) {
+      std::string jnt = GetTreeElementSegment(it->second).getJoint().getName();
       size_t val = GetTreeElementQNr(it->second);
-      jnt_map_[it->first] = val;
+      jnt_map_[jnt] = val;
       joints_.push_back(val);
-      names_.push_back(it->first);
+      names_.push_back(jnt);
     }
     // assume no wrenches
     wmap_[it->first] = KDL::Wrench::Zero();

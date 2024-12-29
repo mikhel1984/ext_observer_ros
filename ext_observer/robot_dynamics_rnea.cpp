@@ -19,8 +19,10 @@ RobotDynamicsRnea::RobotDynamicsRnea()
 Vec RobotDynamicsRnea::tranCqd(Vec& q, Vec& qd)
 {
   int N = jointNo();
-  _zero.resize(N); _zero.setZero();
+  _zero.resize(N);
+  _zero.setZero();
   _p0 = rnea(q, _zero, qd);  // M * qd
+  _sum.resize(N);
   _sum.setZero();
 
   for(int i = 0; i < N; i++) {

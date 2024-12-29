@@ -10,7 +10,7 @@ def generate_launch_description():
             # model
             "urdf": "",
             "joint_names": ["joint1", "joint2"],
-            "friction": [-0.1, -0.2],  # coefficients
+            "friction": [1.0, 2.0],  # coefficients
 
             # observer (momentum, disturbance, filter, sm)
             "observer_type": "momentum",

@@ -75,6 +75,10 @@ ExtObserverNode::ExtObserverNode()
     return;
   }
 
+  dynamics_.set_friction(
+    this->get_parameter("joint_names").as_string_array(),
+    this->get_parameter("friction").as_double_array());
+
   using std::placeholders::_1;
   using std::placeholders::_2;
 
