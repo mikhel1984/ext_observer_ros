@@ -7,9 +7,27 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(urdf REQUIRED)
+find_package(orocos_kdl REQUIRED)
+find_package(kdl_parser REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+include_directories(include ext_observer)
+
+add_executable(ext_observer_node
+  src/ext_observer_node.cpp
+  src/robot_tree.cpp
+  ext_observer/robot_dynamics_rnea.cpp
+)
+ament_target_dependencies(ext_observer_node
+  rclcpp
+  sensor_msgs
+  urdf
+  kdl_parser
+  orocos_kdl
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -22,5 +40,10 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+install(
+  TARGETS ext_observer_node
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_package()

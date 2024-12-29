@@ -2,8 +2,8 @@
 #ifndef FILTERED_DYNAMIC_OBSERVER_RNEA_HPP
 #define FILTERED_DYNAMIC_OBSERVER_RNEA_HPP
 
-#include "ext_observer/external_observer.hpp"
-#include "ext_observer/iir_filter.hpp"
+#include "external_observer.hpp"
+#include "iir_filter.hpp"
 
 #define ID_FDynObserverRnea 22
 

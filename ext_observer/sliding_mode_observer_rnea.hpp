@@ -9,7 +9,7 @@
 #define SLIDING_MODE_OBSERVER_RNEA_HPP
 
 
-#include "ext_observer/external_observer.hpp"
+#include "external_observer.hpp"
 
 #define BIGR 50   /**< Map tanh to sign. */
 #define ID_SlidingModeObserverRnea 23

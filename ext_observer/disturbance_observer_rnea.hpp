@@ -8,7 +8,7 @@
 #ifndef DISTURBANCE_OBSERVER_RNEA_HPP
 #define DISTURBANCE_OBSERVER_RNEA_HPP
 
-#include "ext_observer/external_observer.hpp"
+#include "external_observer.hpp"
 
 #define ID_DisturbanceObserverRnea 24
 
