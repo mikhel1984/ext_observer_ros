@@ -1,4 +1,4 @@
-// Copyright 2020-2024 Stanislav Mikhel
+// Copyright 2024 Stanislav Mikhel
 
 #ifndef EXT_OBSERVER_ROS__ROBOT_TREE_HPP_
 #define EXT_OBSERVER_ROS__ROBOT_TREE_HPP_

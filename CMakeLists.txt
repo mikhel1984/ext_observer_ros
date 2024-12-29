@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(urdf REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(kdl_parser REQUIRED)
@@ -24,6 +25,7 @@ add_executable(ext_observer_node
 ament_target_dependencies(ext_observer_node
   rclcpp
   sensor_msgs
+  std_srvs
   urdf
   kdl_parser
   orocos_kdl

@@ -1,4 +1,4 @@
-// Copyright 2020-2024 Stanislav Mikhel
+// Copyright 2024 Stanislav Mikhel
 
 #include "ext_observer_ros/ext_observer_node.hpp"
 
@@ -75,12 +75,16 @@ ExtObserverNode::ExtObserverNode()
     return;
   }
 
+  using std::placeholders::_1;
+  using std::placeholders::_2;
+
   auto sensor_qos = rclcpp::QoS(rclcpp::KeepLast(5), rmw_qos_profile_sensor_data);
   pub_torque_ = this->create_publisher<sensor_msgs::msg::JointState>(
     "/out/ext_torque", sensor_qos);
   sub_state_ = this->create_subscription<sensor_msgs::msg::JointState>(
-    "/in/joint_state", sensor_qos,
-    std::bind(&ExtObserverNode::estimate, this, std::placeholders::_1));
+    "/in/joint_state", sensor_qos, std::bind(&ExtObserverNode::estimate, this, _1));
+  srv_reset_ = this->create_service<std_srvs::srv::Empty>(
+    "/ext_observer_reset", std::bind(&ExtObserverNode::reset_state, this, _1, _2));
 }
 
 void ExtObserverNode::estimate(const sensor_msgs::msg::JointState& msg)
@@ -105,6 +109,14 @@ void ExtObserverNode::estimate(const sensor_msgs::msg::JointState& msg)
 
   pub_torque_->publish(out);
 }
+
+void ExtObserverNode::reset_state(
+  [[maybe_unused]] const std_srvs::srv::Empty::Request::SharedPtr req,
+  [[maybe_unused]] std_srvs::srv::Empty::Response::SharedPtr resp)
+{
+  observer_->reset();
+}
+
 
 // call
 int main (int argc, char** argv)

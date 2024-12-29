@@ -10,6 +10,7 @@ of external torques as [JointState](https://docs.ros.org/en/noetic/api/sensor_ms
 |------|------|-------------|
 | /in/joint_state | [JointState](https://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/JointState.html) | List of joints with current positions, velocities and troques |
 | /out/ext_torque | [JointState](https://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/JointState.html) | Found external torques. Fill only _name_ and _effort_ fields. |
+| /ext_observer_reset | [Empty](https://docs.ros.org/en/noetic/api/std_srvs/html/srv/Empty.html) | Reset observer state. |
 
 ## Parameters
 

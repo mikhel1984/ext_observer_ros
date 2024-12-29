@@ -1,4 +1,4 @@
-// Copyright 2020-2024 Stanislav Mikhel
+// Copyright 2024 Stanislav Mikhel
 
 #include <urdf/model.h>
 #include <kdl_parser/kdl_parser.hpp>
