@@ -18,6 +18,7 @@ public:
 
 private:
   void estimate(const sensor_msgs::msg::JointState& msg);
+
   void reset_state(
     const std_srvs::srv::Empty::Request::SharedPtr req,
     std_srvs::srv::Empty::Response::SharedPtr resp);

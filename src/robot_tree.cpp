@@ -38,25 +38,26 @@ void RobotTree::init_internal(const KDL::Tree& tree)
   for (auto it = segments.begin(); it != segments.end(); it++) {
     auto tp = GetTreeElementSegment(it->second).getJoint().getType();
     if (tp != KDL::Joint::Fixed) {
-      std::string jnt = GetTreeElementSegment(it->second).getJoint().getName();
+      std::string name = GetTreeElementSegment(it->second).getJoint().getName();
       size_t val = GetTreeElementQNr(it->second);
-      jnt_map_[jnt] = val;
+      jnt_map_[name] = val;
       joints_.push_back(val);
-      names_.push_back(jnt);
+      names_.push_back(name);
     }
     // assume no wrenches
     wmap_[it->first] = KDL::Wrench::Zero();
   }
-  joint_tot_ = tree.getNrOfJoints();
 
+  size_t joint_tot_ = tree.getNrOfJoints();
   q_.resize(joint_tot_);
   qd_.resize(joint_tot_);
   q2d_.resize(joint_tot_);
   tau_.resize(joint_tot_);
 
-  tau_out_.resize(joints_.size());
+  joint_no_ = joints_.size();
+  tau_out_.resize(joint_no_);
   tau_out_.setZero();
-  friction_.resize(joints_.size());
+  friction_.resize(joint_no_);
   friction_.setZero();
 
   solver_ = std::make_unique<KDL::TreeIdSolver_RNE>(tree, KDL::Vector(0, 0, GRAVITY));
@@ -76,7 +77,7 @@ void RobotTree::set_friction(const std::vector<std::string>& nms, const std::vec
 
 void RobotTree::fill(const std::vector<std::string>& nms, const std::vector<double>& vs, Vec& vec)
 {
-  vec.resize(joints_.size());
+  vec.resize(joint_no_);
   for (size_t i = 0; i < nms.size(); i++) {
     if (i >= vs.size()) {
       break;
@@ -92,21 +93,21 @@ void RobotTree::fill_inv(
   const Vec& vec, std::vector<std::string>& nms, std::vector<double>& vs)
 {
   nms = names_;
-  size_t len = joints_.size();
-  vs.resize(len);
-  for (size_t i = 0; i < len; i++) {
+  vs.resize(joint_no_);
+  for (size_t i = 0; i < joint_no_; i++) {
     vs[i] = vec(i);
   }
 }
 
 Vec RobotTree::rnea(Vec& q, Vec& qd, Vec& q2d, double g)
 {
+  tau_out_.setZero();
   if (!solver_) {
     return tau_out_;
   }
 
   // input -> internal representation
-  for (size_t src = 0; src < joints_.size(); ++src) {
+  for (size_t src = 0; src < joint_no_; ++src) {
     size_t dst = joints_[src];
     q_(dst) = q(src);
     qd_(dst) = qd(src);
@@ -114,15 +115,18 @@ Vec RobotTree::rnea(Vec& q, Vec& qd, Vec& q2d, double g)
   }
 
   // RNEA
+  int res = 0;
   if (g == 0) {
-    solver_no_grav_->CartToJnt(q_, qd_, q2d_, wmap_, tau_);
+    res = solver_no_grav_->CartToJnt(q_, qd_, q2d_, wmap_, tau_);
   } else {
-    solver_->CartToJnt(q_, qd_, q2d_, wmap_, tau_);
+    res = solver_->CartToJnt(q_, qd_, q2d_, wmap_, tau_);
   }
 
-  // internal representation -> output
-  for (size_t dst = 0; dst < joints_.size(); ++dst) {
-    tau_out_(dst) = tau_(joints_[dst]);
+  if (KDL::SolverI::E_NOERROR == res) {
+    // internal representation -> output
+    for (size_t dst = 0; dst < joints_.size(); ++dst) {
+      tau_out_(dst) = tau_(joints_[dst]);
+    }
   }
 
   return tau_out_;

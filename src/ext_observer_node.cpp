@@ -94,12 +94,12 @@ ExtObserverNode::ExtObserverNode()
 void ExtObserverNode::estimate(const sensor_msgs::msg::JointState& msg)
 {
   double sec = msg.header.stamp.sec + msg.header.stamp.nanosec*1E-9;
+  double dt = sec - last_sec_;
   if (last_sec_ < 0) {
     // skip first
     last_sec_ = sec;
     return;
   }
-  double dt = sec - last_sec_;
   last_sec_ = sec;
 
   dynamics_.fill(msg.name, msg.position, q_);
