@@ -100,6 +100,7 @@ void ExtObserverNode::estimate(const sensor_msgs::msg::JointState& msg)
     return;
   }
   double dt = sec - last_sec_;
+  last_sec_ = sec;
 
   dynamics_.fill(msg.name, msg.position, q_);
   dynamics_.fill(msg.name, msg.velocity, dq_);
